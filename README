@@ -1,0 +1,8 @@
+1、	it's similar to simDHT, https://github.com/laomayi/simDHT
+
+2、	this project is written by QT 5.3 with mingW, while the simDHT written by python.
+
+3、	I didn't test it enough, because it takes a lot of bandwidth. when I test it, my friends blame me, and force me to stop test.
+	It seems to work well.
+
+4、	It takes less memory than simDHT.
