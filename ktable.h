@@ -21,7 +21,6 @@ public:
         this->UdpPort = UdpPort;
     }
     ~Knode(){
-        nid.clear();
     }
 };
 

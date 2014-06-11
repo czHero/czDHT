@@ -57,6 +57,8 @@ void KRPC::Recv()
         if(bencode->parse(datagram)){
             Dictionary result = bencode->dictionary();
             if(result["y"]=="q"){
+                if(result["q"].toByteArray()=="get_peers")
+                    qDebug()<<datagram;
                 query_received(result, from_ip, from_prot);
             }else if(result["y"]=="r"){
                 response_received(result, from_ip, from_prot);
@@ -143,7 +145,7 @@ void KrpcClient::findNode(QHostAddress addr, uint16_t port, QByteArray nid)
     cmsg["id"]=Nid;
     cmsg["target"]=Utils::randID();
     toSend["t"]=Tid;
-    toSend["y"]="q";
+    toSend["y"]=QByteArray("q");
     toSend["q"]=QByteArray("find_node");
     toSend["a"]=QVariant::fromValue<QMap<QByteArray, QVariant> >(cmsg);
     send_krpc(toSend,addr,port);
@@ -211,11 +213,16 @@ KrpcServer::KrpcServer(kTable *table, QString ip, uint16_t port,int timerDelay, 
 
 void KrpcServer::get_peers_received(Dictionary &msg ,QHostAddress addr, uint16_t port){
     if(!m_LogFileName.isEmpty())
-    {
-        QFile myFile(m_LogFileName);
-        myFile.open(QIODevice::WriteOnly|QIODevice::Append);
-        QTextStream myLog(&myFile);
-        myLog << (msg["info_hash"].toByteArray()) << endl;
-        updata();
+    {        
+        try{
+            QFile myFile(m_LogFileName);
+            myFile.open(QIODevice::WriteOnly|QIODevice::Append);
+            QTextStream myLog(&myFile);
+            myLog << (msg["info_hash"].toByteArray()) << endl;
+            updata();
+            myFile.close();
+        }catch(QString exception){
+            qDebug()<<exception;
+        }
     }
 }

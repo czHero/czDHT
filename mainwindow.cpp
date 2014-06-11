@@ -45,6 +45,7 @@ void MainWindow::updataUI(){
 
 void MainWindow::on_change_clicked()
 {
+    qDebug()<<"start";
     //链表长为10000
     table = new czDHT::kTable(10000);
     //端口为10005， joinDHT时隔50s

@@ -18,12 +18,14 @@ SOURCES += main.cpp\
     bencodeparser.cpp \
     ktable.cpp \
     utils.cpp \
-    krpc.cpp
+    krpc.cpp \
+    ccrashstack.cpp
 
 HEADERS  += mainwindow.h \
     bencodeparser.h \
     ktable.h \
     utils.h \
-    krpc.h
+    krpc.h \
+    ccrashstack.h
 
 FORMS    += mainwindow.ui

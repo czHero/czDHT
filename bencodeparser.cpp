@@ -263,21 +263,22 @@ bool BencodeParser::getDictionary(QMap<QByteArray, QVariant> *dictionary)
 bool BencodeParser::putVariant(QVariant &variant){
 
     switch(variant.type()){
-    case QMetaType::Int:{
-        compiledValue.append(QString("i%d").arg(variant.toInt()));
+    case QMetaType::Int:{        
+        compiledValue.append(QByteArray("i")+QByteArray().setNum(variant.toInt()));
         return true;
     }
     case QMetaType::LongLong:{
-        compiledValue.append(QString("i%d").arg(variant.toLongLong()));
+        compiledValue.append(QByteArray("i")+QByteArray().setNum(variant.toLongLong()));
         return true;
     }
     case QMetaType::QByteArray:{
-        compiledValue.append(QString("%1:").arg(variant.toByteArray().length()));
+        compiledValue.append(QByteArray().setNum(variant.toByteArray().length())+QByteArray(":"));
         compiledValue.append(variant.toByteArray());
         return true;
     }
     case QMetaType::QString:{
-        compiledValue.append(QString("%1:%2").arg(variant.toString().length()).arg(variant.toString()));
+        compiledValue.append(QByteArray().setNum(variant.toString().toLocal8Bit().length())+QByteArray(":"));
+        compiledValue.append(variant.toString().toLocal8Bit());
         return true;
     }
     case QMetaType::QVariantList:{
@@ -296,7 +297,8 @@ bool BencodeParser::putVariant(QVariant &variant){
         QMap<QString,QVariant> tmap = variant.toMap();
         QMap<QString,QVariant>::iterator it;
         for(it=tmap.begin();it!=tmap.end();it++){
-            compiledValue.append(QString("%1:%2").arg(it.key().length()).arg(it.key()));
+            compiledValue.append(QByteArray().setNum(it.key().toLocal8Bit().length())+QByteArray(":"));
+            compiledValue.append(it.key().toLocal8Bit());
             if(!putVariant(*it))
                 return false;
         }
@@ -311,7 +313,8 @@ bool BencodeParser::putVariant(QVariant &variant){
             compiledValue.append("d");
             Dictionary::iterator it;
             for(it=tdict.begin();it!=tdict.end();it++){
-                compiledValue.append(QString("%1:%2").arg(QString(it.key()).length()).arg(QString(it.key())));
+                compiledValue.append(QByteArray().setNum(it.key().length())+QByteArray(":"));
+                compiledValue.append(it.key());
                 if(!putVariant(*it))
                     return false;
             }
