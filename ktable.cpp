@@ -12,18 +12,20 @@ kTable::kTable(int maxSize)
 
 void kTable::putANode(Knode* node)
 {
-    if(m_pnodeList.size()>m_imax_size)
-        return;
+
     list_mutex.lock();
-    m_pnodeList.push_back(node);
+    if(m_pnodeList.size()<m_imax_size)
+        m_pnodeList.push_back(node);
     list_mutex.unlock();
 }
 
 Knode* kTable::getANode(){
-    Knode* ret;
+    Knode* ret=NULL;
     list_mutex.lock();
-    ret = m_pnodeList.front();
-    m_pnodeList.pop_front();
+    if(!m_pnodeList.empty()){
+        ret = m_pnodeList.front();
+        m_pnodeList.pop_front();
+    }
     list_mutex.unlock();
     return ret;
 }

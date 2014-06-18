@@ -30,7 +30,7 @@ long __stdcall   callback(_EXCEPTION_POINTERS*   excp)
 
 int main(int argc, char *argv[])
 {
-    SetUnhandledExceptionFilter(callback);
+    //SetUnhandledExceptionFilter(callback);
     QApplication a(argc, argv);
     MainWindow w;
     w.show();

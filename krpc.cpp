@@ -57,8 +57,6 @@ void KRPC::Recv()
         if(bencode->parse(datagram)){
             Dictionary result = bencode->dictionary();
             if(result["y"]=="q"){
-                if(result["q"].toByteArray()=="get_peers")
-                    qDebug()<<datagram;
                 query_received(result, from_ip, from_prot);
             }else if(result["y"]=="r"){
                 response_received(result, from_ip, from_prot);
@@ -177,11 +175,12 @@ void KrpcClient::run(){
     while(isWorking){
         if(table->isEmpty()){
             join_success=false;
-            usleep(1000);
+            usleep(5000);
             continue;
         }
-        while(!table->isEmpty()){
-            Knode* node = table->getANode();
+        Knode* node = NULL;
+        for(node = table->getANode(); node!=NULL;node = table->getANode()){
+//        while((Knode* node = table->getANode())!=NULL){
             node->ip = qToBigEndian(node->ip);
             node->UdpPort = qToBigEndian(node->UdpPort);
             findNode(QHostAddress(node->ip), node->UdpPort,node->nid);
