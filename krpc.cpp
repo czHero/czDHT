@@ -7,6 +7,7 @@
 #include <QtEndian>
 #include <QFile>
 #include <QIODevice>
+#include <QDateTime>
 
 using namespace czDHT;
 
@@ -214,7 +215,9 @@ void KrpcServer::get_peers_received(Dictionary &msg ,QHostAddress addr, uint16_t
     if(!m_LogFileName.isEmpty())
     {        
         try{
-            QFile myFile(m_LogFileName);
+            QDateTime current_date_time = QDateTime::currentDateTime();
+            QString data = current_date_time.toString("yyyy-MM-dd-hh");
+            QFile myFile(m_LogFileName+"\\"+data);
             myFile.open(QIODevice::WriteOnly|QIODevice::Append);
             QTextStream myLog(&myFile);
             myLog << (msg["info_hash"].toByteArray()) << endl;
